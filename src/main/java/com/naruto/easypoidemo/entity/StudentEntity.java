@@ -20,19 +20,38 @@ public class StudentEntity  implements Serializable {
      */
     private String id;
     /**
-     * 学生姓名
-     */
-    @Excel(name = "学生姓名", height = 20, width = 30, isImportField = "true_st")
+     * @Excel 注解表示需要导出在excel的字段，
+     * name表示要在excel显示的表头，
+     * isImportField 表示是否导出，默认为true，如果不想导出可以不写@Excel注解
+     **/
+    @Excel(name = "学生姓名", isImportField = "true_st")
     private String name;
     /**
-     * 学生性别
-     */
+     * @Excel 注解表示需要导出在excel的字段，
+     * name表示要在excel显示的表头，
+     * replace 表示替换，如果是0会替换成男，1会替换成女，
+     * suffix 替换之后加的后缀
+     * needMerge表示是否需要合并单元格
+     * isImportField 表示是否导出，默认为true，如果不想导出可以不写@Excel注解
+     **/
     @Excel(name = "学生性别", replace = { "男_0", "女_1" }, suffix = "生", isImportField = "true_st")
     private int sex;
 
-    @Excel(name = "出生日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd", isImportField = "true_st", width = 20)
+    /**
+     * @Excel 注解表示需要导出在excel的字段，
+     * name 表示要在excel显示的表头，
+     * databaseFormat 导出时间设置,如果字段是Date类型则不需要设置 数据库如果是string 类型,这个需要设置这个数据库格式,用以转换时间格式输出
+     * format 导入和导出的时间格式
+     * isImportField 表示是否导出，默认为true，如果不想导出可以不写@Excel注解
+     **/
+    @Excel(name = "出生日期", databaseFormat="yyyyMMddHHmmss",format = "yyyy-MM-dd", isImportField = "true_st")
     private Date birthday;
-
-    @Excel(name = "进校日期", databaseFormat = "yyyyMMddHHmmss", format = "yyyy-MM-dd")
+    /**
+     * @Excel 注解表示需要导出在excel的字段，
+     * name 表示要在excel显示的表头，
+     * format 导入和导出的时间格式
+     * isImportField 表示是否导出，默认为true，如果不想导出可以不写@Excel注解
+     **/
+    @Excel(name = "进校日期", format = "yyyy-MM-dd")
     private Date registrationDate;
 }

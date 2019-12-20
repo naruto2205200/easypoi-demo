@@ -2,11 +2,14 @@ package com.naruto.easypoidemo.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import com.naruto.easypoidemo.entity.CourseEntity;
 import com.naruto.easypoidemo.entity.StudentEntity;
 import com.naruto.easypoidemo.entity.TeacherEntity;
+import com.naruto.easypoidemo.utils.CourseEntityUtils;
 import com.naruto.easypoidemo.utils.ExcelUtils;
+import com.naruto.easypoidemo.utils.StudentListUtils;
 import com.naruto.easypoidemo.vo.PersonExportVo;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import io.swagger.annotations.Api;
@@ -266,5 +269,20 @@ public class ExcelController {
     }
 
 
+    @ApiOperation(value = "导出excel10", notes = "导出一个list集合，对象是包含所有需要的信息的一个实体对象")
+    @RequestMapping(value = "/export10", method = RequestMethod.GET )
+    public void export10(HttpServletResponse response) throws IOException {
+        List<StudentEntity> list = StudentListUtils.getStudentList();
+//        ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生", "学生"), StudentEntity.class, list);
+        ExcelUtils.exportExcel(list,StudentEntity.class,"export10",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+    }
+
+    @ApiOperation(value = "导出excel11", notes = "导出一个list集合，对象包含相关一对多关系")
+    @RequestMapping(value = "/export11", method = RequestMethod.GET )
+    public void export11(HttpServletResponse response) throws IOException {
+        List<CourseEntity> list = CourseEntityUtils.getCourseList();
+//        ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生", "学生"), StudentEntity.class, list);
+        ExcelUtils.exportExcel(list,CourseEntity.class,"export10",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+    }
 
 }

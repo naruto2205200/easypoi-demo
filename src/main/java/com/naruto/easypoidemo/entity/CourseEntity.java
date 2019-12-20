@@ -19,13 +19,24 @@ import java.util.List;
 public class CourseEntity implements Serializable {
     /** 主键 */
     private String id;
-    /** 课程名称 */
-    @Excel(name = "课程名称", orderNum = "1", width = 25,needMerge = true)
+    /**
+     * @Excel 注解表示需要导出在excel的字段，
+     * name表示要在excel显示的表头，
+     * orderNum表示排序列，
+     * needMerge表示是否需要合并单元格
+     * isImportField 表示是否导出，默认为true，如果不想导出可以不写@Excel注解
+     **/
+    @Excel(name = "课程名称", orderNum = "1",needMerge = true)
     private String name;
     /** 老师主键 */
     @ExcelEntity(id = "absent")
     private TeacherEntity mathTeacher;
 
+    /**
+     * @ExcelCollection 表示一对多的一个集合
+     * name表示要在excel显示的表头
+     * orderNum表示排序列
+     */
     @ExcelCollection(name = "学生", orderNum = "4")
     private List<StudentEntity> students;
 }
