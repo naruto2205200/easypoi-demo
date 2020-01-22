@@ -4,9 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import com.naruto.easypoidemo.entity.CourseEntity;
-import com.naruto.easypoidemo.entity.StudentEntity;
-import com.naruto.easypoidemo.entity.TeacherEntity;
+import com.naruto.easypoidemo.entity.*;
 import com.naruto.easypoidemo.utils.CourseEntityUtils;
 import com.naruto.easypoidemo.utils.ExcelUtils;
 import com.naruto.easypoidemo.utils.StudentListUtils;
@@ -14,6 +12,7 @@ import com.naruto.easypoidemo.vo.PersonExportVo;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,16 +28,16 @@ import java.util.*;
  * @Describetion
  * @date 2019/11/2510:10
  */
-@Api(tags="接口所在的类")
+@Api(tags="EasyPoi 导出Excel，对于一些复杂的合并表头的操作还是有一定缺陷，不能通过注解解决，需要通过模板来解决")
 @RestController
 @RequestMapping("/excel")
 public class ExcelController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
-    @ApiOperation(value = "导出excel4", notes = "合并单元格，列由实体vo 固定")
-    @RequestMapping(value = "/export4", method = RequestMethod.GET)
-    public void exportExcel4(HttpServletResponse response) throws IOException {
+    @ApiOperation(value = "导出excel1", notes = "合并单元格，列由实体vo 固定")
+    @RequestMapping(value = "/export1", method = RequestMethod.GET)
+    public void exportExcel1(HttpServletResponse response) throws IOException {
         Date now = new Date();
         List<CourseEntity> list = new ArrayList<>();
         CourseEntity c1 = new CourseEntity();
@@ -97,9 +96,9 @@ public class ExcelController {
      * @param response
      * @throws IOException
      */
-    @ApiOperation(value = "导出excel", notes = "动态导出需要的列，而不是固定列")
-    @RequestMapping(value = "/export6", method = RequestMethod.GET)
-    public void exportExcel6(HttpServletResponse response) throws IOException {
+    @ApiOperation(value = "导出excel2", notes = "动态导出需要的列，而不是固定列")
+    @RequestMapping(value = "/export2", method = RequestMethod.GET)
+    public void exportExcel2(HttpServletResponse response) throws IOException {
         List<ExcelExportEntity> beanList = new ArrayList();
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 =new HashMap<>();
@@ -181,8 +180,8 @@ public class ExcelController {
      *
      * @param response
      */
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
-    public void exportExcel(HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/export3", method = RequestMethod.GET)
+    public void exportExcel3(HttpServletResponse response) throws IOException {
         long start = System.currentTimeMillis();
         List<PersonExportVo> personList = new ArrayList();
         for (int i = 0; i < 5; i++) {
@@ -193,17 +192,15 @@ public class ExcelController {
             personList.add(personVo);
         }
         logger.debug("导出excel所花时间：" + (System.currentTimeMillis() - start));
-//        ExcelUtils.exportExcel(personList, "员工信息表", "员工信息", PersonExportVo.class, "员工信息", response);
         ExcelExportUtil.exportExcel(new ExportParams(), PersonExportVo.class, personList);
     }
 
     /**
      * 导出
-     *
      * @param response
      */
-    @RequestMapping(value = "/export2", method = RequestMethod.GET)
-    public void exportExcel2(HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/export4", method = RequestMethod.GET)
+    public void exportExcel4(HttpServletResponse response) throws IOException {
         long start = System.currentTimeMillis();
         List<PersonExportVo> personList = new ArrayList();
         PersonExportVo personVo = new PersonExportVo();
@@ -255,34 +252,59 @@ public class ExcelController {
 
     /**
      * 导出
-     *
      * @param response
      */
-    @RequestMapping(value = "/export3", method = RequestMethod.GET)
-    public void exportExcel3(HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/export5", method = RequestMethod.GET)
+    public void exportExcel5(HttpServletResponse response) throws IOException {
         long start = System.currentTimeMillis();
         List<PersonExportVo> personList = new ArrayList();
-//        ExcelExportEntity
         logger.debug("导出excel所花时间：" + (System.currentTimeMillis() - start));
         ExcelUtils.exportExcel(personList, "员工信息表", "员工信息", PersonExportVo.class, "员工信息", response);
 
     }
 
 
-    @ApiOperation(value = "导出excel10", notes = "导出一个list集合，对象是包含所有需要的信息的一个实体对象")
-    @RequestMapping(value = "/export10", method = RequestMethod.GET )
-    public void export10(HttpServletResponse response) throws IOException {
+    @ApiOperation(value = "导出excel6", notes = "导出一个list集合，对象是包含所有需要的信息的一个实体对象")
+    @RequestMapping(value = "/export6", method = RequestMethod.GET )
+    public void exportExcel6(HttpServletResponse response) throws IOException {
         List<StudentEntity> list = StudentListUtils.getStudentList();
-//        ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生", "学生"), StudentEntity.class, list);
-        ExcelUtils.exportExcel(list,StudentEntity.class,"export10",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+        ExcelUtils.exportExcel(list,StudentEntity.class,"export6",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
     }
 
-    @ApiOperation(value = "导出excel11", notes = "导出一个list集合，对象包含相关一对多关系")
-    @RequestMapping(value = "/export11", method = RequestMethod.GET )
-    public void export11(HttpServletResponse response) throws IOException {
+    @ApiOperation(value = "导出excel7", notes = "导出一个list集合，对象包含相关一对多关系")
+    @RequestMapping(value = "/export7", method = RequestMethod.GET )
+    public void exportExcel7(HttpServletResponse response) throws IOException {
         List<CourseEntity> list = CourseEntityUtils.getCourseList();
-//        ExcelExportUtil.exportExcel(new ExportParams("计算机一班学生", "学生"), StudentEntity.class, list);
-        ExcelUtils.exportExcel(list,CourseEntity.class,"export10",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+        ExcelUtils.exportExcel(list,CourseEntity.class,"export7",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
     }
+
+    /**
+     * 合并方法有缺陷，表头只能在一行，不能合并指定的行
+     * @param response
+     * @throws IOException
+     */
+    @ApiOperation(value = "导出excel8", notes = "导出一个list集合，对象包含相关一对多关系")
+    @RequestMapping(value = "/export8", method = RequestMethod.GET )
+    public void exportExcel8(HttpServletResponse response) throws IOException {
+        List<Course2Entity> list = CourseEntityUtils.getCourseList2();
+        ExcelUtils.exportExcel(list, Course2Entity.class,"export8",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+    }
+
+
+    /**
+     * 学生信息导出，导出对象是实体对象，不包含list、一对多关系，合并表头
+     * groupname属性
+     * @param response
+     * @throws IOException
+     */
+    @ApiOperation(value = "导出excel9", notes = "导出一个list集合，对象包含相关一对多关系")
+    @RequestMapping(value = "/export9", method = RequestMethod.GET )
+    public void exportExcel9(HttpServletResponse response) throws IOException {
+        List<Course3Entity> list = CourseEntityUtils.getCourseList3();
+        ExcelUtils.exportExcel(list, Course3Entity.class,"export9",new ExportParams("计算机一班学生", "学生", ExcelType.XSSF),response);
+    }
+
+
+
 
 }
